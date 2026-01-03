@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:supermarket2/screens/calculatescreen.dart'; // change if your file name differs
+import 'package:supermarket2/screens/calculatescreen.dart';
 
 class ResultScreen extends StatefulWidget {
   final int score;
@@ -45,8 +45,8 @@ class _ResultScreenState extends State<ResultScreen>
 
   _ConfettiPiece _randomPiece() {
     return _ConfettiPiece(
-      x: _rng.nextDouble(), // 0..1 across screen
-      y: -_rng.nextDouble() * 0.6, // start above screen
+      x: _rng.nextDouble(),
+      y: -_rng.nextDouble() * 0.6,
       size: 6 + _rng.nextDouble() * 8,
       speed: 0.35 + _rng.nextDouble() * 0.9,
       sway: (_rng.nextDouble() * 2 - 1) * 0.35,
@@ -93,12 +93,11 @@ class _ResultScreenState extends State<ResultScreen>
             ),
           ),
 
-          // Dark overlay
+
           Positioned.fill(
             child: Container(color: Colors.black.withOpacity(0.25)),
           ),
 
-          // 🎉 Confetti overlay (only if good score)
           if (_showConfetti)
             Positioned.fill(
               child: IgnorePointer(
@@ -116,7 +115,7 @@ class _ResultScreenState extends State<ResultScreen>
               ),
             ),
 
-          // Result panel
+
           Center(
             child: Container(
               width: 340,
@@ -158,7 +157,7 @@ class _ResultScreenState extends State<ResultScreen>
 
                   const SizedBox(height: 16),
 
-                  // Message
+
                   Text(
                     good ? "Great job! 🎉" : "Try again 💪",
                     style: const TextStyle(
@@ -169,7 +168,7 @@ class _ResultScreenState extends State<ResultScreen>
 
                   const SizedBox(height: 12),
 
-                  // Score box
+
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
@@ -201,7 +200,7 @@ class _ResultScreenState extends State<ResultScreen>
 
                   const SizedBox(height: 18),
 
-                  // Play again
+
                   SizedBox(
                     width: double.infinity,
                     height: 54,
@@ -226,7 +225,7 @@ class _ResultScreenState extends State<ResultScreen>
 
                   const SizedBox(height: 12),
 
-                  // Home/back
+
                   SizedBox(
                     width: double.infinity,
                     height: 54,
@@ -259,11 +258,11 @@ class _ResultScreenState extends State<ResultScreen>
   }
 }
 
-// ---------------- Confetti engine (no package) ----------------
+
 
 class _ConfettiPiece {
-  final double x; // 0..1
-  final double y; // start above 0
+  final double x;
+  final double y;
   final double size;
   final double speed;
   final double sway;
@@ -285,7 +284,7 @@ class _ConfettiPiece {
 
 class _ConfettiPainter extends CustomPainter {
   final List<_ConfettiPiece> pieces;
-  final double t; // 0..1
+  final double t;
 
   _ConfettiPainter({required this.pieces, required this.t});
 
@@ -294,15 +293,15 @@ class _ConfettiPainter extends CustomPainter {
     final paint = Paint();
 
     for (final p in pieces) {
-      // Fall down: uses t but also loops visually
-      final fall = (p.y + p.speed * (t * 3.2)) % 1.4; // wrap
+
+      final fall = (p.y + p.speed * (t * 3.2)) % 1.4;
       final y = fall * size.height;
 
-      // Sway left/right
+
       final sway = sin((t * 2 * pi) + p.angle) * p.sway;
       final x = (p.x + sway) * size.width;
 
-      // Rotation
+
       final rot = p.angle + p.rotationSpeed * t;
 
       paint.color = p.color.withOpacity(0.95);
@@ -311,7 +310,7 @@ class _ConfettiPainter extends CustomPainter {
       canvas.translate(x, y);
       canvas.rotate(rot);
 
-      // small rectangle confetti
+
       final rect = Rect.fromCenter(
         center: Offset.zero,
         width: p.size,

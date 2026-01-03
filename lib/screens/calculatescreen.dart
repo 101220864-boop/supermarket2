@@ -13,14 +13,10 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   final Random _random = Random();
 
-  // score
+
   int score = 0;
   int answered = 0;
-
-  // 0=ADD, 1=MULTIPLY, 2=SUBTRACT
   int questionIndex = 0;
-
-  // cart + math
   List<CartItem> cart = [];
   late CartItem itemA;
   late CartItem itemB;
@@ -35,7 +31,7 @@ class _GameScreenState extends State<GameScreen> {
     _newRound();
   }
 
-  // ---------- Operation text ----------
+
   String currentOperation() {
     if (questionIndex == 0) return "ADD";
     if (questionIndex == 1) return "MULTIPLY";
@@ -52,18 +48,13 @@ class _GameScreenState extends State<GameScreen> {
     return "Subtract total of ${itemA.name} and ${itemB.name}";
   }
 
-  // ---------- Round ----------
+
   void _newRound() {
     _generateCart();
-
-    // choose 2 items for multiply/subtract questions
     itemA = cart[0];
     itemB = cart[1];
-
-    // now safe to calculate
     correctTotal = _round2(_calculateTotal());
     choices = _makeTwoChoices(correctTotal);
-
     feedback = "";
     setState(() {});
   }
@@ -83,13 +74,12 @@ class _GameScreenState extends State<GameScreen> {
       return CartItem(
         name: p["name"] as String,
         price: p["price"] as double,
-        quantity: _random.nextInt(3) + 1, // 1..3
+        quantity: _random.nextInt(3) + 1,
       );
     });
   }
 
   double _calculateTotal() {
-    // Q1: ADD (real cart total)
     if (questionIndex == 0) {
       double total = 0;
       for (final item in cart) {
@@ -98,12 +88,11 @@ class _GameScreenState extends State<GameScreen> {
       return total;
     }
 
-    // Q2: MULTIPLY (qty × qty)
     if (questionIndex == 1) {
       return (itemA.quantity * itemB.quantity).toDouble();
     }
 
-    // Q3: SUBTRACT (line total difference)
+
     final a = itemA.price * itemA.quantity;
     final b = itemB.price * itemB.quantity;
     return a >= b ? a - b : b - a;
@@ -114,7 +103,7 @@ class _GameScreenState extends State<GameScreen> {
   List<double> _makeTwoChoices(double correct) {
     double wrong;
     do {
-      final delta = (_random.nextInt(7) + 1) * 0.5; // 0.5..3.5
+      final delta = (_random.nextInt(7) + 1) * 0.5;
       wrong = correct + (_random.nextBool() ? delta : -delta);
       wrong = _round2(wrong);
     } while (wrong <= 0 || wrong == correct);
@@ -123,7 +112,6 @@ class _GameScreenState extends State<GameScreen> {
     return list;
   }
 
-  // ---------- Choices popup ----------
   void _openChoicesBox() {
     showDialog(
       context: context,
@@ -221,7 +209,7 @@ class _GameScreenState extends State<GameScreen> {
         questionIndex++;
         _newRound();
       } else {
-        // after question 3 -> result
+
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -235,13 +223,13 @@ class _GameScreenState extends State<GameScreen> {
     });
   }
 
-  // ---------- UI ----------
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          // BACKGROUND
+
           Positioned.fill(
             child: Image.asset(
               "assets/images/game_bg.png",
@@ -249,7 +237,6 @@ class _GameScreenState extends State<GameScreen> {
             ),
           ),
 
-          // TOP OPERATION BAR
           Positioned(
             top: 25,
             left: 0,
@@ -274,7 +261,6 @@ class _GameScreenState extends State<GameScreen> {
             ),
           ),
 
-          // HINT
           Positioned(
             top: 70,
             left: 20,
@@ -293,7 +279,6 @@ class _GameScreenState extends State<GameScreen> {
             ),
           ),
 
-          // CART PANEL
           Positioned(
             left: 20,
             top: 110,
@@ -368,7 +353,6 @@ class _GameScreenState extends State<GameScreen> {
               ),
             ),
 
-          // LEFT BUTTON -> RESULT NOW (shows progress)
           Positioned(
             left: 20,
             bottom: 20,
@@ -391,7 +375,6 @@ class _GameScreenState extends State<GameScreen> {
             ),
           ),
 
-          // RIGHT BUTTON -> OPEN CHOICES BOX
           Positioned(
             right: 20,
             bottom: 20,
@@ -409,7 +392,7 @@ class _GameScreenState extends State<GameScreen> {
   }
 }
 
-// Cart row widget (outside class is OK because it doesn't use context/_checkAnswer)
+
 Widget _cartRow(String name, int qty, String price) {
   return Container(
     margin: const EdgeInsets.only(bottom: 10),

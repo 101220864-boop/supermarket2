@@ -24,7 +24,7 @@ List<CartItem> generateRandomCart({int itemsCount = 3}) {
   return picked
       .map((p) => CartItem(
     product: p,
-    quantity: 1 + _rng.nextInt(4), // 1..4
+    quantity: 1 + _rng.nextInt(4),
   ))
       .toList();
 }
@@ -34,6 +34,5 @@ double calculateCartTotal(List<CartItem> cart) {
   for (final item in cart) {
     total += item.totalPrice;
   }
-  // round to 2 decimals
-  return (total * 100).round() / 100;
+ return (total * 100).round() / 100;
 }
