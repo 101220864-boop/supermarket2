@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:supermarket2/screens/calculatescreen.dart';
 
-import 'StartScreen.dart';
+import 'screens/StartScreen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,11 +10,11 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-
-      home: StartScreen(),
+      home:GameScreen()
+      //  home: StartScreen(),
     );
   }}

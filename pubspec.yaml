@@ -90,3 +90,7 @@ flutter:
   assets:
     - assets/images/homepage.jpg
     - assets/images/start_button.jpg
+    - assets/images/game_bg.png
+    - assets/ui/btn_left.png
+    - assets/ui/btn_right.png
+
