@@ -1,7 +1,11 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:supermarket2/screens/resultscreen.dart';
+
 import '../modle/cart-item.dart';
+import '../widget/cart_panel.dart';
+import '../widget/game_header.dart';
+
+import 'resultscreen.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -13,10 +17,9 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   final Random _random = Random();
 
-
   int score = 0;
-  int answered = 0;
   int questionIndex = 0;
+
   List<CartItem> cart = [];
   late CartItem itemA;
   late CartItem itemB;
@@ -31,7 +34,6 @@ class _GameScreenState extends State<GameScreen> {
     _newRound();
   }
 
-
   String currentOperation() {
     if (questionIndex == 0) return "ADD";
     if (questionIndex == 1) return "MULTIPLY";
@@ -39,15 +41,10 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   String operationHint() {
-    if (questionIndex == 0) {
-      return "Add all item totals";
-    }
-    if (questionIndex == 1) {
-      return "Multiply quantities of ${itemA.name} × ${itemB.name}";
-    }
+    if (questionIndex == 0) return "Add all item totals";
+    if (questionIndex == 1) return "Multiply quantities of ${itemA.name} × ${itemB.name}";
     return "Subtract total of ${itemA.name} and ${itemB.name}";
   }
-
 
   void _newRound() {
     _generateCart();
@@ -55,8 +52,7 @@ class _GameScreenState extends State<GameScreen> {
     itemB = cart[1];
     correctTotal = _round2(_calculateTotal());
     choices = _makeTwoChoices(correctTotal);
-    feedback = "";
-    setState(() {});
+    setState(() => feedback = "");
   }
 
   void _generateCart() {
@@ -87,12 +83,9 @@ class _GameScreenState extends State<GameScreen> {
       }
       return total;
     }
-
     if (questionIndex == 1) {
       return (itemA.quantity * itemB.quantity).toDouble();
     }
-
-
     final a = itemA.price * itemA.quantity;
     final b = itemB.price * itemB.quantity;
     return a >= b ? a - b : b - a;
@@ -116,66 +109,56 @@ class _GameScreenState extends State<GameScreen> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (_) {
-        return Center(
-          child: Material(
-            color: Colors.transparent,
-            child: Container(
-              width: 300,
-              padding: const EdgeInsets.all(18),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF6E8C8),
-                borderRadius: BorderRadius.circular(20),
-                boxShadow: const [
-                  BoxShadow(
-                    blurRadius: 18,
-                    color: Colors.black45,
-                    offset: Offset(0, 10),
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    "Choose the Answer",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    operationHint(),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 18),
-                  _gameChoiceButton(choices[0]),
-                  const SizedBox(height: 12),
-                  _gameChoiceButton(choices[1]),
-                ],
-              ),
+      builder: (_) => Center(
+        child: Material(
+          color: Colors.transparent,
+          child: Container(
+            width: 300,
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF6E8C8),
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: const [
+                BoxShadow(
+                  blurRadius: 18,
+                  color: Colors.black45,
+                  offset: Offset(0, 10),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  "Choose the Answer",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w900),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  operationHint(),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 18),
+                _choiceButton(choices[0]),
+                const SizedBox(height: 12),
+                _choiceButton(choices[1]),
+              ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
-  Widget _gameChoiceButton(double value) {
+  Widget _choiceButton(double value) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF2F7BEA),
           padding: const EdgeInsets.symmetric(vertical: 14),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         ),
         onPressed: () {
           Navigator.pop(context);
@@ -183,11 +166,7 @@ class _GameScreenState extends State<GameScreen> {
         },
         child: Text(
           "\$${value.toStringAsFixed(2)}",
-          style: const TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w900,
-            color: Colors.white,
-          ),
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w900, color: Colors.white),
         ),
       ),
     );
@@ -197,7 +176,6 @@ class _GameScreenState extends State<GameScreen> {
     final ok = selected == correctTotal;
 
     setState(() {
-      answered++;
       if (ok) score++;
       feedback = ok ? "✅ Correct!" : "❌ Wrong!";
     });
@@ -209,125 +187,38 @@ class _GameScreenState extends State<GameScreen> {
         questionIndex++;
         _newRound();
       } else {
-
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (_) => ResultScreen(
-              score: score,
-              totalQuestions: 3,
-            ),
+            builder: (_) => ResultScreen(score: score, totalQuestions: 3),
           ),
         );
       }
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-
           Positioned.fill(
-            child: Image.asset(
-              "assets/images/game_bg.png",
-              fit: BoxFit.cover,
-            ),
+            child: Image.asset("assets/images/game_bg.png", fit: BoxFit.cover),
           ),
-
           Positioned(
             top: 25,
             left: 0,
             right: 0,
             child: Center(
-              child: Container(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.6),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Text(
-                  "Question ${questionIndex + 1} / 3  —  ${currentOperation()}",
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white,
-                  ),
-                ),
+              child: GameHeader(
+                questionIndex: questionIndex,
+                operationText: currentOperation(),
+                hintText: operationHint(),
               ),
             ),
           ),
+          Positioned(left: 20, top: 110, child: CartPanel(cart: cart)),
 
-          Positioned(
-            top: 70,
-            left: 20,
-            right: 20,
-            child: Center(
-              child: Text(
-                operationHint(),
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.white,
-                  shadows: [Shadow(blurRadius: 6, color: Colors.black54)],
-                ),
-              ),
-            ),
-          ),
-
-          Positioned(
-            left: 20,
-            top: 110,
-            child: Container(
-              width: 320,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF6E8C8),
-                borderRadius: BorderRadius.circular(18),
-                boxShadow: const [
-                  BoxShadow(
-                    blurRadius: 12,
-                    color: Colors.black26,
-                    offset: Offset(0, 6),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10, horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF2F7BEA),
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    child: const Text(
-                      "Your Cart",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  for (final item in cart)
-                    _cartRow(
-                      item.name,
-                      item.quantity,
-                      item.price.toStringAsFixed(2),
-                    ),
-                ],
-              ),
-            ),
-          ),
-
-          // FEEDBACK
           if (feedback.isNotEmpty)
             Positioned(
               bottom: 130,
@@ -335,19 +226,14 @@ class _GameScreenState extends State<GameScreen> {
               right: 0,
               child: Center(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
                   decoration: BoxDecoration(
                     color: Colors.black.withOpacity(0.55),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     feedback,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                    ),
+                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Colors.white),
                   ),
                 ),
               ),
@@ -358,32 +244,20 @@ class _GameScreenState extends State<GameScreen> {
             bottom: 20,
             child: GestureDetector(
               onTap: () {
-                Navigator.push(
+                Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(
-                    builder: (_) => ResultScreen(
-                      score: score,
-                      totalQuestions: answered == 0 ? 3 : answered,
-                    ),
-                  ),
+                  MaterialPageRoute(builder: (_) => ResultScreen(score: score, totalQuestions: 3)),
                 );
               },
-              child: Image.asset(
-                "assets/ui/btn_left.png",
-                width: 220,
-              ),
+              child: Image.asset("assets/ui/btn_left.png", width: 220),
             ),
           ),
-
           Positioned(
             right: 20,
             bottom: 20,
             child: GestureDetector(
               onTap: _openChoicesBox,
-              child: Image.asset(
-                "assets/ui/btn_right.png",
-                width: 220,
-              ),
+              child: Image.asset("assets/ui/btn_right.png", width: 220),
             ),
           ),
         ],
@@ -392,30 +266,3 @@ class _GameScreenState extends State<GameScreen> {
   }
 }
 
-
-Widget _cartRow(String name, int qty, String price) {
-  return Container(
-    margin: const EdgeInsets.only(bottom: 10),
-    padding: const EdgeInsets.all(10),
-    decoration: BoxDecoration(
-      color: Colors.white.withOpacity(0.6),
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: Row(
-      children: [
-        const Icon(Icons.shopping_bag, size: 26),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Text(
-            "$name x$qty",
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-        ),
-        Text(
-          "\$$price",
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-      ],
-    ),
-  );
-}

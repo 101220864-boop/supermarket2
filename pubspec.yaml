@@ -30,10 +30,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
+  shared_preferences: ^2.2.3
   cupertino_icons: ^1.0.8
+  google_fonts: ^6.1.0
+  sqflite: ^2.3.3
+  path: ^1.9.0
+  sqflite_common_ffi: ^2.3.3
+
 
 dev_dependencies:
   flutter_test:
@@ -93,4 +96,21 @@ flutter:
     - assets/images/game_bg.png
     - assets/ui/btn_left.png
     - assets/ui/btn_right.png
+    - assets/images/g1.jpg
+    - assets/images/g2.jpg
+    - assets/images/g3.jpg
+    - assets/images/g4.jpg
+    - assets/images/m1.jpeg
+    - assets/images/m2.jpeg
+    - assets/images/m3.jpeg
+    - assets/images/m4.jpeg
+    - assets/images/m5.jpeg
+    - assets/images/m6.jpeg
+    - assets/images/m7.jpeg
+    - assets/images/m8.jpeg
+    - assets/images/m9.jpeg
+    - assets/sounds/click.mp3
+    - assets/sounds/correct.mp3
+    - assets/sounds/rong.mp3
+    - assets/sounds/winner.mp3
 
